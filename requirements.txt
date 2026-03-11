@@ -1,7 +1,8 @@
-Flask
-Flask-SQLAlchemy
-Flask-Login
-Flask-Migrate
-pandas
-openpyxl
-python-dotenv
+Flask==3.0.3
+Flask-SQLAlchemy==3.1.1
+Flask-Login==0.6.3
+Flask-Migrate==4.0.7
+pandas==2.2.2
+openpyxl==3.1.5
+python-dotenv==1.0.1
+Werkzeug==3.0.3

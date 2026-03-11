@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Budget List</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Department</th>
+                    <th>Category</th>
+                    <th>Project</th>
+                    <th>Year</th>
+                    <th class="text-end">Budget</th>
+                    <th class="text-end">Used</th>
+                    <th class="text-end">Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.department }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>{{ item.project }}</td>
+                    <td>{{ item.fiscal_year }}</td>
+                    <td class="text-end">{{ "{:,.2f}".format(item.amount) }}</td>
+                    <td class="text-end">{{ "{:,.2f}".format(item.used_amount) }}</td>
+                    <td class="text-end">{{ "{:,.2f}".format(item.balance_amount) }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="8">ยังไม่มีข้อมูล</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

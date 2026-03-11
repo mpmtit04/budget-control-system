@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Upload Excel</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label">เลือกไฟล์ Excel</label>
+                <input type="file" name="file" class="form-control" accept=".xls,.xlsx" required>
+            </div>
+            <div class="alert alert-info">
+                คอลัมน์ที่ต้องมี: Department, Category, Project, Budget, Year
+            </div>
+            <button class="btn btn-success">Upload และ Import</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
