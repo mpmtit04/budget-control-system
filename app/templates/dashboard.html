@@ -1,29 +1,268 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h2 class="mb-4">Executive Dashboard</h2>
 
-<h2>Budget Dashboard</h2>
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card dashboard-card shadow-sm border-0">
+            <div class="card-body">
+                <div class="small text-muted">Total Budget</div>
+                <div class="display-6 fw-semibold">{{ "{:,.2f}".format(total_budget or 0) }}</div>
+            </div>
+        </div>
+    </div>
 
-<table class="table">
+    <div class="col-md-3">
+        <div class="card dashboard-card shadow-sm border-0">
+            <div class="card-body">
+                <div class="small text-muted">Total Used</div>
+                <div class="display-6 fw-semibold">{{ "{:,.2f}".format(total_used or 0) }}</div>
+            </div>
+        </div>
+    </div>
 
-<tr>
-<th>Department</th>
-<th>Project</th>
-<th>Budget</th>
-<th>Used</th>
-</tr>
+    <div class="col-md-3">
+        <div class="card dashboard-card shadow-sm border-0">
+            <div class="card-body">
+                <div class="small text-muted">Balance</div>
+                <div class="display-6 fw-semibold">{{ "{:,.2f}".format(total_balance or 0) }}</div>
+            </div>
+        </div>
+    </div>
 
-{% for b in budgets %}
+    <div class="col-md-3">
+        <div class="card dashboard-card shadow-sm border-0">
+            <div class="card-body">
+                <div class="small text-muted">Budget Utilization</div>
+                <div class="display-6 fw-semibold">{{ "{:,.2f}".format(budget_utilization or 0) }}%</div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<tr>
-<td>{{b.department}}</td>
-<td>{{b.project}}</td>
-<td>{{b.amount}}</td>
-<td>{{b.used}}</td>
-</tr>
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white fw-semibold">Budget vs Used (Top 10 Projects)</div>
+            <div class="card-body">
+                <canvas id="chartTop10" height="120"></canvas>
+            </div>
+        </div>
+    </div>
 
-{% endfor %}
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white fw-semibold">Budget by Department</div>
+            <div class="card-body">
+                <canvas id="chartDepartment" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
 
-</table>
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white fw-semibold">Budget by Fiscal Year</div>
+            <div class="card-body">
+                <canvas id="chartFiscalYear" height="120"></canvas>
+            </div>
+        </div>
+    </div>
 
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white fw-semibold">Contract Expiry Overview</div>
+            <div class="card-body">
+                <canvas id="chartContractExpiry" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-semibold">Latest Budgets</div>
+            <div class="card-body">
+                <table class="table table-sm align-middle">
+                    <thead>
+                        <tr>
+                            <th>Department</th>
+                            <th>Project</th>
+                            <th class="text-end">Budget</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for b in budgets %}
+                        <tr>
+                            <td>{{ b.department }}</td>
+                            <td>{{ b.project }}</td>
+                            <td class="text-end">{{ "{:,.2f}".format(b.amount or 0) }}</td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="3">ยังไม่มีข้อมูล</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-semibold">Latest Transactions</div>
+            <div class="card-body">
+                <table class="table table-sm align-middle">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th class="text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tx in latest_transactions %}
+                        <tr>
+                            <td>{{ tx.trans_date }}</td>
+                            <td>{{ tx.trans_type }}</td>
+                            <td class="text-end">{{ "{:,.2f}".format(tx.amount or 0) }}</td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="3">ยังไม่มีข้อมูล</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-1">
+    <div class="col-md-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-semibold">Contracts Near Expiry</div>
+            <div class="card-body">
+                <table class="table table-sm align-middle">
+                    <thead>
+                        <tr>
+                            <th>Vendor</th>
+                            <th>Contract</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in contracts %}
+                        <tr>
+                            <td>{{ c.vendor }}</td>
+                            <td>{{ c.contract_name }}</td>
+                            <td>{{ c.end_date }}</td>
+                            <td>
+                                {% if c.days_to_expire < 0 %}
+                                    <span class="badge text-bg-danger">Expired</span>
+                                {% elif c.days_to_expire <= c.alert_days %}
+                                    <span class="badge text-bg-warning">Expiring</span>
+                                {% else %}
+                                    <span class="badge text-bg-success">Active</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="4">ยังไม่มีข้อมูล</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+fetch("{{ url_for('main.dashboard_chart_data') }}")
+  .then(response => response.json())
+  .then(data => {
+    new Chart(document.getElementById("chartTop10"), {
+      type: "bar",
+      data: {
+        labels: data.top10.labels,
+        datasets: [
+          {
+            label: "Budget",
+            data: data.top10.budget
+          },
+          {
+            label: "Used",
+            data: data.top10.used
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: "top" } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+
+    new Chart(document.getElementById("chartDepartment"), {
+      type: "pie",
+      data: {
+        labels: data.department.labels,
+        datasets: [
+          {
+            label: "Budget",
+            data: data.department.budget
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+
+    new Chart(document.getElementById("chartFiscalYear"), {
+      type: "bar",
+      data: {
+        labels: data.fiscal_year.labels,
+        datasets: [
+          {
+            label: "Budget",
+            data: data.fiscal_year.budget
+          },
+          {
+            label: "Used",
+            data: data.fiscal_year.used
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: "top" } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+
+    new Chart(document.getElementById("chartContractExpiry"), {
+      type: "doughnut",
+      data: {
+        labels: data.contract_expiry.labels,
+        datasets: [
+          {
+            label: "Contracts",
+            data: data.contract_expiry.values
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+  });
+</script>
 {% endblock %}

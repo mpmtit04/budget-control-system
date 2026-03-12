@@ -8,3 +8,76 @@ body {
 .table td {
     vertical-align: middle;
 }
+
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    border-radius: 12px;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+}
+
+.navbar-brand img {
+    object-fit: contain;
+}
+
+.project-row {
+    background-color: #dbeafe !important; /* ฟ้าอ่อน */
+    font-weight: 600;
+}
+
+.tx-row {
+    background-color: #fff7db !important; /* เหลืองอ่อน */
+}
+
+.tx-empty-row {
+    background-color: #f8f9fa !important; /* เทาอ่อน */
+    color: #6c757d;
+}
+body {
+    background-color: #f4f6f9;
+}
+
+.card {
+    border-radius: 14px;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+}
+
+.navbar-brand img {
+    object-fit: contain;
+}
+
+.project-row {
+    background-color: #dbeafe !important;
+    font-weight: 600;
+}
+
+.tx-row {
+    background-color: #fff7db !important;
+}
+
+.tx-empty-row {
+    background-color: #f8f9fa !important;
+    color: #6c757d;
+}
+
+.dashboard-card {
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+}
+
+.card-header {
+    border-bottom: 1px solid #eef2f7;
+}
+
+canvas {
+    min-height: 320px;
+}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Transaction History</h2>
+
+<div class="card shadow-sm mb-3">
+    <div class="card-body">
+        <strong>Project:</strong> {{ budget.project }}<br>
+        <strong>Department:</strong> {{ budget.department }}<br>
+        <strong>Current Budget:</strong> {{ "{:,.2f}".format(budget.amount or 0) }}<br>
+        <strong>Used:</strong> {{ "{:,.2f}".format(budget.used_amount or 0) }}<br>
+        <strong>Balance:</strong> {{ "{:,.2f}".format(budget.balance_amount or 0) }}
+    </div>
+</div>
+
+<div class="mb-3">
+    <a class="btn btn-primary" href="{{ url_for('main.budget_transaction', budget_id=budget.id) }}">เพิ่ม Transaction</a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th class="text-end">Amount</th>
+                    <th>Reference</th>
+                    <th>Description</th>
+                    <th>Created By</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.trans_date }}</td>
+                    <td>{{ item.trans_type }}</td>
+                    <td class="text-end">{{ "{:,.2f}".format(item.amount or 0) }}</td>
+                    <td>{{ item.reference_no }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.created_by }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6">ยังไม่มีรายการ</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

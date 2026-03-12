@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Project Detail Report by Fiscal Year</h2>
+
+<div class="card shadow-sm mb-3">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Fiscal Year</label>
+                <input type="text" name="year" class="form-control" value="{{ selected_year }}">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button class="btn btn-primary w-100">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Total Budget</h6>
+                <h4>{{ "{:,.2f}".format(total_budget or 0) }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Total Used</h6>
+                <h4>{{ "{:,.2f}".format(total_used or 0) }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Total Balance</h6>
+                <h4>{{ "{:,.2f}".format(total_balance or 0) }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th style="width: 120px;">Type</th>
+                        <th>Fiscal Year</th>
+                        <th>Department</th>
+                        <th>Category</th>
+                        <th>Project / Description</th>
+                        <th>Date</th>
+                        <th>Reference</th>
+                        <th class="text-end">Budget</th>
+                        <th class="text-end">Used</th>
+                        <th class="text-end">Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        <tr class="project-row">
+                            <td><strong>PROJECT</strong></td>
+                            <td>{{ item.fiscal_year }}</td>
+                            <td>{{ item.department }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>
+                                <strong>{{ item.project }}</strong>
+                                {% if item.budget_code %}
+                                    <div class="small text-muted">Code: {{ item.budget_code }}</div>
+                                {% endif %}
+                            </td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td class="text-end fw-bold">{{ "{:,.2f}".format(item.amount or 0) }}</td>
+                            <td class="text-end fw-bold">{{ "{:,.2f}".format(item.used_amount or 0) }}</td>
+                            <td class="text-end fw-bold">{{ "{:,.2f}".format(item.balance_amount or 0) }}</td>
+                        </tr>
+
+                        {% if item.transactions %}
+                            {% for tx in item.transactions %}
+                                <tr class="tx-row">
+                                    <td>USE</td>
+                                    <td>{{ item.fiscal_year }}</td>
+                                    <td>{{ item.department }}</td>
+                                    <td>{{ item.category }}</td>
+                                    <td>{{ tx.description or item.project }}</td>
+                                    <td>{{ tx.trans_date }}</td>
+                                    <td>{{ tx.reference_no or "-" }}</td>
+                                    <td class="text-end">-</td>
+                                    <td class="text-end">{{ "{:,.2f}".format(tx.amount or 0) }}</td>
+                                    <td class="text-end">-</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr class="tx-empty-row">
+                                <td>USE</td>
+                                <td>{{ item.fiscal_year }}</td>
+                                <td>{{ item.department }}</td>
+                                <td>{{ item.category }}</td>
+                                <td class="text-muted">No transactions</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td class="text-end">-</td>
+                                <td class="text-end">0.00</td>
+                                <td class="text-end">-</td>
+                            </tr>
+                        {% endif %}
+                    {% else %}
+                        <tr>
+                            <td colspan="10">ยังไม่มีข้อมูล</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="table-secondary fw-bold">
+                        <td colspan="7" class="text-end">Grand Total</td>
+                        <td class="text-end">{{ "{:,.2f}".format(total_budget or 0) }}</td>
+                        <td class="text-end">{{ "{:,.2f}".format(total_used or 0) }}</td>
+                        <td class="text-end">{{ "{:,.2f}".format(total_balance or 0) }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -10,7 +10,10 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="{{ url_for('main.dashboard') }}">Budget Control</a>
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('main.dashboard') }}">
+    <img src="{{ url_for('static', filename='mazda_logo.png') }}" alt="Mazda Logo" height="36">
+    <span>MPMT Budget Control</span>
+</a>
 
         {% if current_user.is_authenticated %}
         <div class="navbar-nav me-auto">
@@ -19,6 +22,9 @@
             <a class="nav-link" href="{{ url_for('main.new_budget') }}">New Budget</a>
             <a class="nav-link" href="{{ url_for('main.contracts') }}">Contracts</a>
             <a class="nav-link" href="{{ url_for('main.upload') }}">Upload Excel</a>
+            <a class="nav-link" href="{{ url_for('main.report_summary') }}">Reports</a>
+            <a class="nav-link" href="{{ url_for('main.report_projects') }}">Project Report</a>
+            <a class="nav-link" href="{{ url_for('main.report_projects_detail') }}">Project Detail</a>
         </div>
         <div class="navbar-nav">
             <span class="nav-link text-light">{{ current_user.full_name }}</span>

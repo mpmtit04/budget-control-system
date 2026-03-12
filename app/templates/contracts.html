@@ -3,6 +3,7 @@
 {% block content %}
 <h2 class="mb-4">Contracts</h2>
 
+{% if current_user.role == "Admin" %}
 <div class="card shadow-sm mb-4">
     <div class="card-body">
         <form method="post">
@@ -51,6 +52,7 @@
         </form>
     </div>
 </div>
+{% endif %}
 
 <div class="card shadow-sm">
     <div class="card-body">
@@ -62,6 +64,7 @@
                     <th>End Date</th>
                     <th>Days Left</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,9 +75,15 @@
                     <td>{{ item.end_date }}</td>
                     <td>{{ item.days_to_expire }}</td>
                     <td>{{ item.status }}</td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('main.contract_renewals', contract_id=item.id) }}">History</a>
+                        {% if current_user.role == "Admin" %}
+                        <a class="btn btn-sm btn-outline-primary" href="{{ url_for('main.contract_renew', contract_id=item.id) }}">Renew</a>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% else %}
-                <tr><td colspan="5">ยังไม่มีข้อมูล</td></tr>
+                <tr><td colspan="6">ยังไม่มีข้อมูล</td></tr>
                 {% endfor %}
             </tbody>
         </table>

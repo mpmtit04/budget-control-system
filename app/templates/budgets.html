@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Budget List</h2>
+
+<div class="card shadow-sm mb-3">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Department</label>
+                <input type="text" name="department" class="form-control" value="{{ request.args.get('department', '') }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Fiscal Year</label>
+                <input type="text" name="fiscal_year" class="form-control" value="{{ request.args.get('fiscal_year', '') }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Keyword</label>
+                <input type="text" name="keyword" class="form-control" value="{{ request.args.get('keyword', '') }}">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button class="btn btn-primary w-100">ค้นหา</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Department</th>
+                    <th>Category</th>
+                    <th>Project</th>
+                    <th>Year</th>
+                    <th class="text-end">Budget</th>
+                    <th class="text-end">Used</th>
+                    <th class="text-end">Balance</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.department }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>{{ item.project }}</td>
+                    <td>{{ item.fiscal_year }}</td>
+                    <td class="text-end">{{ "{:,.2f}".format(item.amount or 0) }}</td>
+                    <td class="text-end">{{ "{:,.2f}".format(item.used_amount or 0) }}</td>
+                    <td class="text-end">{{ "{:,.2f}".format(item.balance_amount or 0) }}</td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary" href="{{ url_for('main.budget_transaction', budget_id=item.id) }}">Add Tx</a>
+                        <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('main.budget_transactions', budget_id=item.id) }}">History</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="9">ยังไม่มีข้อมูล</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if pagination %}
+        <nav>
+            <ul class="pagination">
+                {% if pagination.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('main.budgets', page=pagination.prev_num, department=request.args.get('department', ''), fiscal_year=request.args.get('fiscal_year', ''), keyword=request.args.get('keyword', '')) }}">Previous</a>
+                </li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">Page {{ pagination.page }} / {{ pagination.pages or 1 }}</span>
+                </li>
+
+                {% if pagination.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('main.budgets', page=pagination.next_num, department=request.args.get('department', ''), fiscal_year=request.args.get('fiscal_year', ''), keyword=request.args.get('keyword', '')) }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

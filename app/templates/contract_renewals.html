@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Contract Renewal History</h2>
+
+<div class="card shadow-sm mb-3">
+    <div class="card-body">
+        <strong>Vendor:</strong> {{ contract.vendor }}<br>
+        <strong>Contract:</strong> {{ contract.contract_name }}<br>
+        <strong>Current End Date:</strong> {{ contract.end_date }}
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Renewal Date</th>
+                    <th>Old End Date</th>
+                    <th>New End Date</th>
+                    <th class="text-end">Renewal Value</th>
+                    <th>Remark</th>
+                    <th>Renewed By</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.renewal_date }}</td>
+                    <td>{{ item.old_end_date }}</td>
+                    <td>{{ item.new_end_date }}</td>
+                    <td class="text-end">{{ "{:,.2f}".format(item.renewal_value or 0) }}</td>
+                    <td>{{ item.remark }}</td>
+                    <td>{{ item.renewed_by }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6">ยังไม่มีประวัติ</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

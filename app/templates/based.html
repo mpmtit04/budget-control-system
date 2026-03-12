@@ -16,12 +16,19 @@
         <div class="navbar-nav me-auto">
             <a class="nav-link" href="{{ url_for('main.dashboard') }}">Dashboard</a>
             <a class="nav-link" href="{{ url_for('main.budgets') }}">Budgets</a>
+
+            {% if current_user.role == "Admin" %}
             <a class="nav-link" href="{{ url_for('main.new_budget') }}">New Budget</a>
-            <a class="nav-link" href="{{ url_for('main.contracts') }}">Contracts</a>
             <a class="nav-link" href="{{ url_for('main.upload') }}">Upload Excel</a>
+            {% endif %}
+
+            <a class="nav-link" href="{{ url_for('main.contracts') }}">Contracts</a>
+            <a class="nav-link" href="{{ url_for('main.contract_alerts') }}">Alerts</a>
+            <a class="nav-link" href="{{ url_for('main.report_summary') }}">Reports</a>
+            <a class="nav-link" href="{{ url_for('main.budgets_export') }}">Export Excel</a>
         </div>
         <div class="navbar-nav">
-            <span class="nav-link text-light">{{ current_user.full_name }}</span>
+            <span class="nav-link text-light">{{ current_user.full_name }} ({{ current_user.role }})</span>
             <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
         </div>
         {% endif %}

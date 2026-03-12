@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Budget Summary Report</h2>
+
+<div class="card shadow-sm mb-3">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Fiscal Year</label>
+                <input type="text" name="year" class="form-control" value="{{ selected_year }}">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button class="btn btn-primary w-100">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Department</th>
+                    <th class="text-end">Budget</th>
+                    <th class="text-end">Used</th>
+                    <th class="text-end">Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dept, values in summary.items() %}
+                <tr>
+                    <td>{{ dept }}</td>
+                    <td class="text-end">{{ "{:,.2f}".format(values.budget or 0) }}</td>
+                    <td class="text-end">{{ "{:,.2f}".format(values.used or 0) }}</td>
+                    <td class="text-end">{{ "{:,.2f}".format(values.balance or 0) }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4">ยังไม่มีข้อมูล</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
